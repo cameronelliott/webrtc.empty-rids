@@ -72,9 +72,9 @@ navigator.mediaDevices
         },
       ],
     });
-    pc.addTransceiver("video");
-    pc.addTransceiver("video");
-    pc.addTransceiver("video");
+    // pc.addTransceiver("video");
+    // pc.addTransceiver("video");
+    // pc.addTransceiver("video");
   });
 
 window.startSession = () => {

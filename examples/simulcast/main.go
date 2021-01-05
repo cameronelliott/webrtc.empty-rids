@@ -3,9 +3,9 @@
 package main
 
 import (
-	"errors"
+	_ "errors"
 	"fmt"
-	"io"
+	_ "io"
 	"time"
 
 	"github.com/pion/rtcp"
@@ -87,10 +87,9 @@ func main() {
 
 	// Set a handler for when a new remote track starts
 	peerConnection.OnTrack(func(track *webrtc.TrackRemote, receiver *webrtc.RTPReceiver) {
-		fmt.Println("Track has started")
-
 		// Start reading from all the streams and sending them to the related output track
 		rid := track.RID()
+		fmt.Println("Track has started  rid is ",rid)
 		go func() {
 			ticker := time.NewTicker(3 * time.Second)
 			for range ticker.C {
@@ -107,14 +106,14 @@ func main() {
 		}()
 		for {
 			// Read RTP packets being sent to Pion
-			packet, _, readErr := track.ReadRTP()
+			_, _, readErr := track.ReadRTP()
 			if readErr != nil {
 				panic(readErr)
 			}
 
-			if writeErr := outputTracks[rid].WriteRTP(packet); writeErr != nil && !errors.Is(writeErr, io.ErrClosedPipe) {
-				panic(writeErr)
-			}
+			// if writeErr := outputTracks[rid].WriteRTP(packet); writeErr != nil && !errors.Is(writeErr, io.ErrClosedPipe) {
+			// 	panic(writeErr)
+			// }
 		}
 	})
 	// Set the handler for ICE connection state and update chan if connected
